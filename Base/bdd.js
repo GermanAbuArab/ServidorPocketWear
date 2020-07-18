@@ -98,8 +98,6 @@ createItem = async (req, res) => {  //todo hacer que devuelva el usuario con id 
         const client = await MongoClient.connect(urlMongo, {useUnifiedTopology: true});
         try {
             const response = await client.db(base).collection("Item").insertOne(item);
-            console.log("hola")
-            console.log(response)
             return response.ops[0];
         } catch (e) {
             throw e;
