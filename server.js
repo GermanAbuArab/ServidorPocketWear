@@ -15,11 +15,19 @@ app.use(bodyParser.json());
 
 
 // Create new user
-app.post('/user', bdd.createUser);
+app.post('/user/:user', bdd.createUser);
 app.get('/user/:user', bdd.findOneUser);
+
+app.get('/userMail/:mail', bdd.findOneUserByMail);
 
 app.post('/item', bdd.createItem);
 
+app.get('/userInventory/:user', bdd.findOneInventory);
+// app.post('/userInventory', bdd.createUserInventory);
+
+
+//update userInventory data using user id
+//app.put('/userInventory/:userID', bdd.putUserInventory);
 
 /*
 // Delete an user data with id
@@ -37,8 +45,7 @@ app.put('/user/:userID', bdd.putUser);
 
 //todo fijarse
 
-//
-app.post('/item', bdd.createItem);                      //Done
+//app.post('/item', bdd.createItem);                      //Done
 
 // Delete an item data with id
 app.delete('/item/:itemID', bdd.deleteItem);           //Done
@@ -87,7 +94,6 @@ app.get('/item/date/update', bdd.findItemsByDateUpdated);      //Done
 
 //Inventarios
 
-app.post('/userInventory', bdd.createUserInventory);
 
 // Delete an userInventory data with id
 app.delete('/userInventory/:userID', bdd.deleteUserInventory);
@@ -95,11 +101,7 @@ app.delete('/userInventory/:userID', bdd.deleteUserInventory);
 // Retrieve a single userInventory data with id of user
 app.get('/userInventory/:userID', bdd.findInventoryByUserID);
 
-// Retrieve all userInventory
-app.get('/userInventory', bdd.findAllInventory);
 
-//update userInventory data using user id
-app.put('/userInventory/:userID', bdd.putUserInventory);
 */
 app.listen(port, function () {
     console.log('listening on port:', port);

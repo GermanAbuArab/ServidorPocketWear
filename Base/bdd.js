@@ -84,6 +84,41 @@ findOneUser = async (req, res) => {
         })
 };
 
+findOneUserByMail = async (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
+    res.set('Acces-Control-Allow-Methods', 'GET');
+    const findUser = async () => {
+        const client = await MongoClient.connect(urlMongo, {useUnifiedTopology: true});
+        try {
+            const user = await client
+                .db(base)
+                .collection("User")
+                .findOne ({email:req.params.mail},{projection: {}});
+            return user;
+        } catch (err) {
+            throw err;
+        } finally {
+            client.close();
+        }
+    };
+    findUser().then((data) => {
+        if(data === null){
+            return res.status(404).send({
+                message: "No se encontro un usuario con este Mail"
+            });
+        }
+        res.status(200)
+        res.end(JSON.stringify(data.password));
+    })
+        .catch((err)=>{
+            console.log(err)
+            return res.status(500).send({
+                message: "Error interno del servidor"
+            });
+
+        })
+};
+
 createItem = async (req, res) => {  //todo hacer que devuelva el usuario con id y todo
     res.set('Access-Control-Allow-Origin', '*');
     res.set('Acces-Control-Allow-Methods', 'POST');
@@ -158,8 +193,43 @@ createItem = async (req, res) => {  //todo hacer que devuelva el usuario con id 
         })
 };
 
+findOneInventory = async (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
+    res.set('Acces-Control-Allow-Methods', 'GET');
+    const findUser = async () => {
+        const client = await MongoClient.connect(urlMongo, {useUnifiedTopology: true});
+        try {
+            const user = await client
+                .db(base)
+                .collection("UserInventory")
+                .findOne ({email:req.params.user},{projection: {}});
+            return user;
+        } catch (err) {
+            throw err;
+        } finally {
+            client.close();
+        }
+    };
+    findUser().then((data) => {
+        if(data === null){
+            return res.status(404).send({
+                message: "No se encontro un Inventario para este Usuario"
+            });
+        }
+        res.status(200)
+        res.end(JSON.stringify(data.password));
+    })
+        .catch((err)=>{
+            console.log(err)
+            return res.status(500).send({
+                message: "Error interno del servidor"
+            });
+
+        })
+};
 
 
-module.exports = {createUser, findOneUser,createItem};
+
+module.exports = {createUser, findOneUser,findOneUserByMail,createItem};
 
 //Todo acordarse de exportar todos los methodos
