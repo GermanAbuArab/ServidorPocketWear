@@ -22,7 +22,9 @@ app.get('/userMail/:mail', bdd.findOneUserByMail);
 
 app.post('/item', bdd.createItem);
 
-//app.get('/userInventory/:user', bdd.findOneInventory);
+app.get('/userInventory/:user', bdd.findInventory);
+
+
 // app.post('/userInventory', bdd.createUserInventory);
 
 
