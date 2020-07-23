@@ -121,6 +121,7 @@ findOneUserByMail = async (req, res) => {
 createItem = async (req, res) => {  //todo hacer que devuelva el usuario con id y todo
     res.set('Access-Control-Allow-Origin', '*');
     res.set('Acces-Control-Allow-Methods', 'POST');
+    log
     var item = {
         type: req.body.type,
         color: req.body.color,
@@ -300,7 +301,7 @@ findStoresItems = async (req, res) => {
 
         });
 };
-/*
+
 
 findTheItem = async (req, res) => { //todo cambiar
     res.set('Access-Control-Allow-Origin', '*');
@@ -309,17 +310,28 @@ findTheItem = async (req, res) => { //todo cambiar
     var type = req.body.type;
     var color = req.body.color;
     var season = req.body.season;
-    var user = req.body.user;
-
-
-
-    const findStores = async () => {
+    var store = req.body.store;
+    var filtros={};
+    if (type){
+        filtros.type=type;
+    }
+    if (color){
+        filtros.color=color;
+    }
+    if (season){
+        filtros.season=season;
+    }
+    if (store){
+        filtros.store=store;
+    }
+    console.log(filtros);
+    const findItems = async () => {
         const client = await MongoClient.connect(urlMongo, {useUnifiedTopology: true});
         try {
             const items = await client
                 .db(base)
                 .collection("Item")
-                .find({}, {projection: {}}).toArray();
+                .find(filtros, {projection: {}}).toArray();
             return items;
         } catch (err) {
             throw err;
@@ -328,7 +340,7 @@ findTheItem = async (req, res) => { //todo cambiar
         }
 
     };
-    findStores().then((data) => {
+    findItems().then((data) => {
         if (data.length === 0) {
             return res.status(404).send({
                 message: "No se encontro ninguna Prenda"
@@ -344,7 +356,7 @@ findTheItem = async (req, res) => { //todo cambiar
             });
 
         });
-};*/
+};
 
 findLastItems = async (req, res) => { //todo deberia andar , pero me siento mal para probarlo creo que el limit no funciona asi
     res.set('Access-Control-Allow-Origin', '*');
@@ -391,7 +403,7 @@ module.exports = {
     findInventory,
     findColorsItems,
     findStoresItems,
-   // findTheItem,
+    findTheItem,
     findLastItems
 };
 
