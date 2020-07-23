@@ -6,11 +6,7 @@ const app= express();
 var port = process.env.PORT || 3001;
 
 var assert = require('assert');
-
-
 app.use(bodyParser.urlencoded({limit: '50mb'}));
-
-
 app.use(bodyParser.json());
 
 
@@ -24,6 +20,13 @@ app.post('/item', bdd.createItem);
 
 app.get('/userInventory/:user', bdd.findInventory);
 
+app.get('/colors', bdd.findColorsItems);                 //Done
+
+app.get('/stores', bdd.findStoresItems);
+
+app.get('/ultimos', bdd.findLastItems);
+
+app.post('/itemCostumized', bdd.findTheItem); //todo terminar
 
 // app.post('/userInventory', bdd.createUserInventory);
 

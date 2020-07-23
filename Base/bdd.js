@@ -125,6 +125,7 @@ createItem = async (req, res) => {  //todo hacer que devuelva el usuario con id 
         type: req.body.type,
         color: req.body.color,
         season: req.body.season,
+        store: req.body.store,
         user: req.body.user,
         img: req.body.image
 
@@ -166,6 +167,7 @@ createItem = async (req, res) => {  //todo hacer que devuelva el usuario con id 
             _id: data._id,
             type: data.type,
             color: data.color,
+            store: data.store,
             season: data.season,
             image: data.image
         };
@@ -194,7 +196,7 @@ createItem = async (req, res) => {  //todo hacer que devuelva el usuario con id 
 findInventory = async (req, res) => {
     res.set('Access-Control-Allow-Origin', '*');
     res.set('Acces-Control-Allow-Methods', 'GET');
-    const findItem = async () => {
+    const findItems = async () => {
         const client = await MongoClient.connect(urlMongo, {useUnifiedTopology: true});
         try {
             const items = await client
@@ -209,7 +211,7 @@ findInventory = async (req, res) => {
         }
 
     };
-    findItem().then((data) => {
+    findItems().then((data) => {
         if (data.length === 0) {
             return res.status(404).send({
                 message: "No se encontro un Inventario para este Usuario"
@@ -227,7 +229,170 @@ findInventory = async (req, res) => {
         });
 };
 
+findColorsItems = async (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
+    res.set('Acces-Control-Allow-Methods', 'GET');
+    const findColors = async () => {
+        const client = await MongoClient.connect(urlMongo, {useUnifiedTopology: true});
+        try {
+            const colores = await client
+                .db(base)
+                .collection("Item")
+                .find({}, {projection: {"_id": 0, "color": 1}}).toArray();
+            return colores;
+        } catch (err) {
+            throw err;
+        } finally {
+            client.close();
+        }
 
-module.exports = {createUser, findOneUser, findOneUserByMail, createItem, findInventory};
+    };
+    findColors().then((data) => {
+        if (data.length === 0) {
+            return res.status(404).send({
+                message: "No se encontro ningun Color"
+            });
+        }
+        res.status(200);
+        res.end(JSON.stringify(data));
+    })
+        .catch((err) => {
+            console.log(err)
+            return res.status(500).send({
+                message: "Error interno del servidor"
+            });
+
+        });
+};
+
+findStoresItems = async (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
+    res.set('Acces-Control-Allow-Methods', 'GET');
+    const findStores = async () => {
+        const client = await MongoClient.connect(urlMongo, {useUnifiedTopology: true});
+        try {
+            const stores = await client
+                .db(base)
+                .collection("Item")
+                .find({}, {projection: {"_id": 0, "stores": 1}}).toArray();
+            return stores;
+        } catch (err) {
+            throw err;
+        } finally {
+            client.close();
+        }
+
+    };
+    findStores().then((data) => {
+        if (data.length === 0) {
+            return res.status(404).send({
+                message: "No se encontro ningun Color"
+            });
+        }
+        res.status(200);
+        res.end(JSON.stringify(data));
+    })
+        .catch((err) => {
+            console.log(err)
+            return res.status(500).send({
+                message: "Error interno del servidor"
+            });
+
+        });
+};
+/*
+
+findTheItem = async (req, res) => { //todo cambiar
+    res.set('Access-Control-Allow-Origin', '*');
+    res.set('Acces-Control-Allow-Methods', 'POST');
+
+    var type = req.body.type;
+    var color = req.body.color;
+    var season = req.body.season;
+    var user = req.body.user;
+
+
+
+    const findStores = async () => {
+        const client = await MongoClient.connect(urlMongo, {useUnifiedTopology: true});
+        try {
+            const items = await client
+                .db(base)
+                .collection("Item")
+                .find({}, {projection: {}}).toArray();
+            return items;
+        } catch (err) {
+            throw err;
+        } finally {
+            client.close();
+        }
+
+    };
+    findStores().then((data) => {
+        if (data.length === 0) {
+            return res.status(404).send({
+                message: "No se encontro ninguna Prenda"
+            });
+        }
+        res.status(200);
+        res.end(JSON.stringify(data));
+    })
+        .catch((err) => {
+            console.log(err)
+            return res.status(500).send({
+                message: "Error interno del servidor"
+            });
+
+        });
+};*/
+
+findLastItems = async (req, res) => { //todo deberia andar , pero me siento mal para probarlo creo que el limit no funciona asi
+    res.set('Access-Control-Allow-Origin', '*');
+    res.set('Acces-Control-Allow-Methods', 'GET');
+    const findStores = async () => {
+        const client = await MongoClient.connect(urlMongo, {useUnifiedTopology: true});
+        try {
+            const ultimos = await client
+                .db(base)
+                .collection("Item")
+                .find({}, {projection: {}}).sort({_id: -1}).limit(27).toArray();
+            return ultimos;
+        } catch (err) {
+            throw err;
+        } finally {
+            client.close();
+        }
+
+    };
+    findStores().then((data) => {
+        if (data.length === 0) {
+            return res.status(404).send({
+                message: "No se encontro ninguna Prenda"
+            });
+        }
+        res.status(200);
+        res.end(JSON.stringify(data));
+    })
+        .catch((err) => {
+            console.log(err)
+            return res.status(500).send({
+                message: "Error interno del servidor"
+            });
+
+        });
+};
+
+
+module.exports = {
+    createUser,
+    findOneUser,
+    findOneUserByMail,
+    createItem,
+    findInventory,
+    findColorsItems,
+    findStoresItems,
+   // findTheItem,
+    findLastItems
+};
 
 //Todo acordarse de exportar todos los methodos
