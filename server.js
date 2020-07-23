@@ -26,7 +26,7 @@ app.get('/stores', bdd.findStoresItems);
 
 app.get('/ultimos', bdd.findLastItems);
 
-app.post('/itemCostumized', bdd.findTheItem); //todo terminar
+// app.post('/itemCostumized', bdd.findTheItem); //todo terminar
 
 // app.post('/userInventory', bdd.createUserInventory);
 
