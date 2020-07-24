@@ -3,6 +3,21 @@ var mongodb = require('mongodb');
 const urlMongo = 'mongodb+srv://Gabuarab:german118431@appmobilesej1-lirw3.gcp.mongodb.net/?retryWrites=true&w=majority';
 const base = "PocketWear";
 
+
+const nodemailer = require("nodemailer");
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'tic3responsebot@gmail.com',
+        pass: 'andaalacanchabatman'
+    }
+});
+
+
+
+
+
 createUser = async (req, res) => {  //todo hacer que devuelva el usuario con id y todo
     res.set('Access-Control-Allow-Origin', '*');
     res.set('Acces-Control-Allow-Methods', 'POST');
@@ -106,6 +121,29 @@ findOneUserByMail = async (req, res) => {
                 message: "No se encontro un usuario con este Mail"
             });
         }
+
+
+        var mailOptions = {
+            from: 'tic3responsebot@gmail.com',
+            to: data.email,
+            subject: 'Olvide mi Contraseña',
+            text: data.user+'_:\n' +
+                'Si recibió este correo es porque solicitó un recordatorio de contraseña. Esta es ' + data.password+'\n' +
+                'Si no solicitó el mail o cree que lo recibió por error, ignore este mensaje.' +
+                'Saludos,\n' +
+                'El equipo de Pocket Wear.'
+
+        };
+
+        transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
+
+
         res.status(200)
         res.end(JSON.stringify(data.password));
     })
