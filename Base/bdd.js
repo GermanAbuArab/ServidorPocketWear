@@ -163,7 +163,6 @@ findOneUserByMail = async (req, res) => {
 createItem = async (req, res) => {  //todo hacer que devuelva el usuario con id y todo
     res.set('Access-Control-Allow-Origin', '*');
     res.set('Acces-Control-Allow-Methods', 'POST');
-    log
     var item = {
         type: req.body.type,
         color: req.body.color,
