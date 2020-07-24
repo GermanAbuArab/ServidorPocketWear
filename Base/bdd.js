@@ -138,14 +138,18 @@ findOneUserByMail = async (req, res) => {
         transporter.sendMail(mailOptions, function (error, info) {
             if (error) {
                 console.log(error);
+                res.status(400)
+                res.end(JSON.stringify("No se pudo mandar el mail Error:"+error));
             } else {
+                res.status(200)
                 console.log('Email sent: ' + info.response);
+                res.end(JSON.stringify(data.password));
             }
         });
 
 
-        res.status(200)
-        res.end(JSON.stringify(data.password));
+
+
     })
         .catch((err) => {
             console.log(err)
