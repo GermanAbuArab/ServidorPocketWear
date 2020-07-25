@@ -372,7 +372,7 @@ findTheItem = async (req, res) => { //todo cambiar
             const items = await client
                 .db(base)
                 .collection("Item")
-                .find(filtros, {projection: {}}).limit(21).toArray();
+                .find(filtros, {projection: {}}).sort({_id: -1}).limit(21).toArray();
             return items;
         } catch (err) {
             throw err;
