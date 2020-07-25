@@ -279,9 +279,8 @@ findColorsItems = async (req, res) => {
         try {
             const colores = await client
                 .db(base)
-                .collection("Item")
-                .find({}, {projection: {"_id": 0, "color": 1}}).toArray();
-            return colores;
+                .command ( { distinct: "Item", key: "color" } );
+            return colores.values;
         } catch (err) {
             throw err;
         } finally {
@@ -314,10 +313,8 @@ findStoresItems = async (req, res) => {
         const client = await MongoClient.connect(urlMongo, {useUnifiedTopology: true});
         try {
             const stores = await client
-                .db(base)
-                .collection("Item")
-                .find({}, {projection: {"_id": 0, "stores": 1}}).toArray();
-            return stores;
+                .db(base) .command ( { distinct: "Item", key: "store" } );
+            return stores.values;
         } catch (err) {
             throw err;
         } finally {
