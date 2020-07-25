@@ -3,6 +3,22 @@ const bodyParser = require('body-parser');
 const bdd = require("./Base/bdd");
 const app= express();
 
+const mailgun = require("mailgun-js");
+const api_key = "aa7f783ea12e269c541be9dec4c541bf-ffefc4e4-6b045567";
+const to = "rodri.lopez98@gmail.com";
+const DOMAIN = 'sandbox0da9547765d6425295506e7df696feb1.mailgun.org';
+const mg = mailgun({apiKey: api_key, domain: DOMAIN});
+const data = {
+    from: 'support@pocketwear.com',
+    to: to,
+    subject: 'Hello',
+    text: 'Si ves este mail anda wacho'
+};
+mg.messages().send(data, function (error, body) {
+    console.log(body);
+});
+
+
 var port = process.env.PORT || 3001;
 
 var assert = require('assert');
