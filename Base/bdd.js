@@ -4,18 +4,11 @@ const urlMongo = 'mongodb+srv://Gabuarab:german118431@appmobilesej1-lirw3.gcp.mo
 const base = "PocketWear";
 
 
-const nodemailer = require("nodemailer");
-
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: 'tic3responsebot@gmail.com',
-        pass: 'andaalacanchabatman'
-    }
-});
-
-
-
+const mailgun = require("mailgun-js");
+const api_key = "aa7f783ea12e269c541be9dec4c541bf-ffefc4e4-6b045567";
+const to = "rodri.lopez98@gmail.com";
+const DOMAIN = 'sandbox0da9547765d6425295506e7df696feb1.mailgun.org';
+const mg = mailgun({apiKey: api_key, domain: DOMAIN});
 
 
 createUser = async (req, res) => {  //todo hacer que devuelva el usuario con id y todo
@@ -121,35 +114,29 @@ findOneUserByMail = async (req, res) => {
                 message: "No se encontro un usuario con este Mail"
             });
         }
-
-
-        var mailOptions = {
-            from: 'tic3responsebot@gmail.com',
+        const mail = {
+            from: 'support@pocketwear.com',
             to: data.email,
             subject: 'Olvide mi Contraseña',
-            text: data.user+'_:\n' +
-                'Si recibió este correo es porque solicitó un recordatorio de contraseña. Esta es ' + data.password+'\n' +
+            text: data.user + '_:\n' +
+                'Si recibió este correo es porque solicitó un recordatorio de contraseña. Esta es ' + data.password + '\n' +
                 'Si no solicitó el mail o cree que lo recibió por error, ignore este mensaje.' +
                 'Saludos,\n' +
                 'El equipo de Pocket Wear.'
-
         };
+        mg.messages().send(mail, function (error, body) {
+            console.log(body);
 
-        transporter.sendMail(mailOptions, function (error, info) {
             if (error) {
                 console.log(error);
                 res.status(400)
-                res.end(JSON.stringify("No se pudo mandar el mail Error:"+error));
+                res.end(JSON.stringify("No se pudo mandar el mail Error:" + error));
             } else {
                 res.status(200)
                 console.log('Email sent: ' + info.response);
                 res.end(JSON.stringify(data.password));
             }
         });
-
-
-
-
     })
         .catch((err) => {
             console.log(err)
@@ -279,7 +266,7 @@ findColorsItems = async (req, res) => {
         try {
             const colores = await client
                 .db(base)
-                .command ( { distinct: "Item", key: "color" } );
+                .command({distinct: "Item", key: "color"});
             return colores.values;
         } catch (err) {
             throw err;
@@ -313,7 +300,7 @@ findStoresItems = async (req, res) => {
         const client = await MongoClient.connect(urlMongo, {useUnifiedTopology: true});
         try {
             const stores = await client
-                .db(base) .command ( { distinct: "Item", key: "store" } );
+                .db(base).command({distinct: "Item", key: "store"});
             return stores.values;
         } catch (err) {
             throw err;
@@ -349,18 +336,18 @@ findTheItem = async (req, res) => { //todo cambiar
     var color = req.body.color;
     var season = req.body.season;
     var store = req.body.store;
-    var filtros={};
-    if (type){
-        filtros.type=type;
+    var filtros = {};
+    if (type) {
+        filtros.type = type;
     }
-    if (color){
-        filtros.color=color;
+    if (color) {
+        filtros.color = color;
     }
-    if (season){
-        filtros.season=season;
+    if (season) {
+        filtros.season = season;
     }
-    if (store){
-        filtros.store=store;
+    if (store) {
+        filtros.store = store;
     }
     console.log(filtros);
     const findItems = async () => {
