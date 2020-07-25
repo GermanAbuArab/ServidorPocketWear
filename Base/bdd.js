@@ -372,7 +372,7 @@ findTheItem = async (req, res) => { //todo cambiar
             const items = await client
                 .db(base)
                 .collection("Item")
-                .find(filtros, {projection: {}}).toArray();
+                .find(filtros, {projection: {}}).limit(21).toArray();
             return items;
         } catch (err) {
             throw err;
@@ -408,7 +408,7 @@ findLastItems = async (req, res) => { //todo deberia andar , pero me siento mal 
             const ultimos = await client
                 .db(base)
                 .collection("Item")
-                .find({}, {projection: {}}).sort({_id: -1}).limit(27).toArray();
+                .find({}, {projection: {}}).sort({_id: -1}).limit(21).toArray();
             return ultimos;
         } catch (err) {
             throw err;
