@@ -20,6 +20,6 @@
     "express": "^4.17.1",
     "mailgun-js": "^0.22.0",
     "mongodb": "^3.5.9",
-    "nodemailer": "^6.4.10"
+    "nodemailer": "^6.4.16"
   }
 }
